@@ -1,6 +1,6 @@
 import isString from 'lodash.isstring';
 
-const hocSymbol = Symbol.for( 'hoc property' );
+const hocFuncSymbol = Symbol.for( 'hoc function property' );
 const storeSymbol = Symbol.for( 'store property' );
 
 class HocMemo {
@@ -10,13 +10,12 @@ class HocMemo {
 	 * Default value is `false`
 	 *
 	 * @constructor
-	 * @param {ReactHocMemo.Decorator<C, OPTS, W>} hoc
-	 * @template [C=ElementType] Incoming component
-	 * @template {Object} [OPTS={}]
-	 * @template [W=ElementType] HOC
+	 * @param {Decorator} hocFunc
+	 * @template [C = ElementType]
+	 * @template [W = ElementType]
 	 */
-	constructor( hoc ) {
-		this[ hocSymbol ] = hoc;
+	constructor( hocFunc ) {
+		this[ hocFuncSymbol ] = hocFunc;
 		this[ storeSymbol ] = {};
 	}
 
@@ -24,16 +23,15 @@ class HocMemo {
 	 * `options.bypass` param when `true` creates new uncached HOC. Useful for HOCs undergoing further alterations.
 	 * Default value is `false`
 	 *
-	 * @type {ReactHocMemo.Decorator<C, OPTS, W>}
-	 * @template [C=ElementType] Incoming component
-	 * @template {Object} [OPTS={}]
-	 * @template [W=ElementType] HOC
+	 * @type {Decorator}
+	 * @template [C = ElementType]
+	 * @template [W = ElementType]
 	 * @throws {HocMemo.DisplayNameError}
 	 */
 	use( Component, options = {} ) {
 		const _options = { bypass: false, ...options };
 		if( _options.bypass ) {
-			return this[ hocSymbol ]( Component, _options );
+			return this[ hocFuncSymbol ]( Component, _options );
 		}
 		const { displayName = null } = Component;
 		if( !isString( displayName ) || !displayName.length ) {
@@ -43,7 +41,7 @@ class HocMemo {
 		if( key in this[ storeSymbol ] ) {
 			return this[ storeSymbol ][ key ];
 		}
-		const Decorated = this[ hocSymbol ]( Component, _options );
+		const Decorated = this[ hocFuncSymbol ]( Component, _options );
 		this[ storeSymbol ][ key ] = Decorated;
 		return Decorated;
 	}
@@ -56,3 +54,21 @@ HocMemo.DisplayNameError = class extends Error {
 };
 
 export default HocMemo;
+
+/**
+ * @typedef {(Component: C, options?: Options) => W} Decorator
+ * @template [C = ElementType]
+ * @template [W = ElementType]
+ */
+
+/**
+ * @typedef {{
+ * 	bypass?: boolean = false,
+ * 	[x:string]: *
+ * }} Options
+ */
+
+/**
+ * @typedef {import("react").ElementType<P>} ElementType
+ * @template [P=any]
+ */

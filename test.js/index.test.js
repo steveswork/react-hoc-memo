@@ -36,33 +36,47 @@ describe( 'ReactHocMemo', () => {
 			expect( testHoc( NoDisplayName, { bypass: true } ) ).not.toThrow();
 		} );
 	} );
-	test( 'Caching', () => {
-		const hocMemo = new HocMemo( hocFuncMock );
-		const testHoc = hocMemo.use.bind( hocMemo );
-		const Test = [];
-		const Test1 = [];
-		Test.push( testHoc( TestComponent ) );
-		Test1.push( testHoc( TestComponent, { mockName: 'test' }) );
-		Test.push( testHoc( TestComponent ) );
-		Test1.push( testHoc( TestComponent, { mockName: 'test' }) );
-		Test1.push( testHoc( TestComponent, { mockName: 'test' }) );
-		expect( Test[ 0 ] === Test1[ 0 ] ).toBe( false );
-		expect( Test[ 0 ] === Test[ 1 ] ).toBe( true );
-		expect( Test1[ 0 ] === Test1[ 1 ] ).toBe( true );
-		expect( Test1[ 0 ] === Test1[ 2 ] ).toBe( true );
+	test( 'sets the `bypass` option to `false` by default', () => {
+		new HocMemo( hocFuncMock ).use( TestComponent );
+		expect( hocFuncMock.mock.calls[ 0 ][ 1 ] ).toEqual(
+			expect.objectContaining({ bypass: false })
+		);
 	} );
-	test( 'Bypass caching', () => {
+	test( 'bypass caching by setting the `bypass` option to `true`', () => {
 		const hocMemo = new HocMemo( hocFuncMock );
 		const testHoc = hocMemo.use.bind( hocMemo );
 		const Test = testHoc( TestComponent, { bypass: true });
 		const Test1 = testHoc( TestComponent, { bypass: true });
 		expect( Test === Test1 ).toBe( false );
 	} );
-	test( 'Assigns default `bypass` options `false`', () => {
-		new HocMemo( hocFuncMock ).use( TestComponent );
-		expect( hocFuncMock.mock.calls[ 0 ][ 1 ] ).toEqual(
-			expect.objectContaining({ bypass: false })
-		);
+	describe( 'Caching behavior', () => {
+		let hocMemo, Test, Test1, testHoc;
+		beforeAll(() => {
+			hocMemo = new HocMemo( hocFuncMock );
+			testHoc = hocMemo.use.bind( hocMemo );
+			Test = [];
+			Test1 = [];
+			Test.push( testHoc( TestComponent ) );
+			Test1.push( testHoc( TestComponent, { mockName: 'test' }) );
+			Test.push( testHoc( TestComponent ) );
+			Test1.push( testHoc( TestComponent, { mockName: 'test' }) );
+			Test1.push( testHoc( TestComponent, { mockName: 'test' }) );
+		});
+		afterAll(() => {
+			hocMemo = Test = Test1 = testHoc = null;
+		});
+		test( 'calls with different arguments yield different HOCs', () => {
+			expect( Test[ 0 ] === Test1[ 0 ] ).toBe( false );
+		});
+		test( 'calls with same arguments received cached HOC', () => {
+			expect( Test[ 0 ] === Test[ 1 ] ).toBe( true );
+		});
+		test( 'Any new HOC result is added to the cache', () => {
+			expect( Test1[ 0 ] === Test1[ 1 ] ).toBe( true );
+		});
+		test( 'Cached HOC results are reused for the life of the application', () => {
+			expect( Test1[ 0 ] === Test1[ 2 ] ).toBe( true );
+		});
 	} );
 	test( 'Passes all arguments through to the hoc function', () => {
 		const hocOptions = { name: 'test', isTest: true, greeting: 'hello memo' };
