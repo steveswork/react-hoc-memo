@@ -3,29 +3,29 @@ import isString from 'lodash.isstring';
 const hocFuncSymbol = Symbol.for( 'hoc function property' );
 const storeSymbol = Symbol.for( 'store property' );
 
+/**
+ * @template [T=ElementType] - HOC function return type
+ * @template [S=ElementType] - Component type supplied to HOC function
+ */
 class HocMemo {
 
 	/**
-	 * `options.bypass` param when `true` creates new uncached HOC. Useful for HOCs undergoing further alterations.
-	 * Default value is `false`
-	 *
 	 * @constructor
-	 * @param {Decorator} hocFunc
-	 * @template [C = ElementType]
-	 * @template [W = ElementType]
+	 * @param {Decorator<S,T>} hocFunc
 	 */
 	constructor( hocFunc ) {
 		this[ hocFuncSymbol ] = hocFunc;
+		/** @type {{[x:symbol]: T}} */
 		this[ storeSymbol ] = {};
 	}
 
 	/**
-	 * `options.bypass` param when `true` creates new uncached HOC. Useful for HOCs undergoing further alterations.
-	 * Default value is `false`
+	 * `options.bypass` param when `true` creates new uncached HOC.
+	 * Useful for HOCs undergoing further alterations.
+	 * Default value is `false`.
 	 *
-	 * @type {Decorator}
-	 * @template [C = ElementType]
-	 * @template [W = ElementType]
+	 * @type {Decorator<C,T>}
+	 * @template {S} [C=S]
 	 * @throws {HocMemo.DisplayNameError}
 	 */
 	use( Component, options = {} ) {
@@ -56,9 +56,9 @@ HocMemo.DisplayNameError = class extends Error {
 export default HocMemo;
 
 /**
- * @typedef {(Component: C, options?: Options) => W} Decorator
- * @template [C = ElementType]
- * @template [W = ElementType]
+ * @typedef {(Component: C, options?: Options) => HOC} Decorator
+ * @template [C=ElementType]
+ * @template [HOC=ElementType]
  */
 
 /**
