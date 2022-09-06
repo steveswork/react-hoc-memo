@@ -25,7 +25,7 @@ class HocMemo {
 	 * Default value is `false`.
 	 *
 	 * @type {Decorator<C,T>}
-	 * @template {S} [C=S]
+	 * @template [C=S]
 	 * @throws {HocMemo.DisplayNameError}
 	 */
 	use( Component, options = {} ) {
