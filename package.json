@@ -6,30 +6,30 @@
   "contributors": [
     "steveswork <stephen.isienyi@webkrafting.com> (https://github.com/steveswork)"
   ],
-  "description": ".",
+  "description": "Memoizes all results to new HOC calls and returns them on subsequent calls.",
   "dependencies": {
-    "@types/react": "^18.0.17",
+    "@types/react": "^18.0.25",
     "lodash.isstring": "^4.0.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.0",
-    "@babel/core": "^7.12.10",
-    "@babel/node": "^7.12.10",
-    "@babel/plugin-transform-runtime": "^7.17.0",
-    "@babel/preset-env": "^7.12.11",
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.2",
+    "@babel/node": "^7.20.2",
+    "@babel/plugin-transform-runtime": "^7.19.6",
+    "@babel/preset-env": "^7.20.2",
     "@types/jest-cli": "^24.3.0",
     "babel-jest": "^26.6.3",
-    "babel-loader": "^8.2.5",
-    "eslint": "^7.15.0",
-    "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest": "^24.1.3",
+    "babel-loader": "^9.1.0",
+    "eslint": "^8.28.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^27.1.5",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-standard": "^5.0.0",
     "jest-cli": "^26.6.3",
     "react": "^18.2.0",
-    "typescript": "^4.8.2"
+    "typescript": "^4.9.3"
   },
   "files": [
     "dist/index.js",
@@ -67,5 +67,5 @@
     "test": "eslint --fix && jest --watchAll"
   },
   "types": "dist/index.d.ts",
-  "version": "0.0.7"
+  "version": "1.0.0"
 }
